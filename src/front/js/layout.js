@@ -8,8 +8,14 @@ import { Demo } from "./pages/demo";
 import { Single } from "./pages/single";
 import injectContext from "./store/appContext";
 
-import { Navbar } from "./component/navbar";
-import { Footer } from "./component/footer";
+import { Navbar } from "./component/Navbar";
+import { Footer } from "./component/Footer";
+import { Planets } from "./component/Planets.jsx";
+import { Characters } from "./component/Characters.jsx";
+import { Starships } from "./component/Starships.jsx";
+import { CharacterDet } from "./component/CharacterDet.jsx";
+import { PlanetDet } from "./component/PlanetDet.jsx";
+import { StarshipDet } from "./component/StarshipDet.jsx";
 
 //create your first component
 const Layout = () => {
@@ -29,6 +35,12 @@ const Layout = () => {
                         <Route element={<Demo />} path="/demo" />
                         <Route element={<Single />} path="/single/:theid" />
                         <Route element={<h1>Not found!</h1>} />
+                        <Route element={<Planets />} path="/planets" />
+                        <Route element={<Characters />} path="/characters" />
+                        <Route element={<Starships />} path="/starships" />
+                        <Route element={<StarshipDet />} path="/starship-details/:starshipid" />
+                        <Route element={<CharacterDet />} path="/character-details/:characterid" />
+                        <Route element={<PlanetDet />} path="/planet-details/:planetid" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>
