@@ -84,8 +84,6 @@ const getState = ({ getStore, getActions, setStore }) => {
 					console.log("Error loading message from backend", error)
 				}
 			},
-			incrementar: () => {setStore({counter: getStore().counter + 1})},
-			decrementar: () => {setStore({counter: getStore().counter - 1})},
 			addFavorites: (newFavorite) => {setStore({favorites: [...getStore().favorites, newFavorite]})},
 			removeFavorites: (removeFavorite) => {
 				setStore({favorites: getStore().favorites.filter((item) => item != removeFavorite)})
