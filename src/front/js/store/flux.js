@@ -28,9 +28,73 @@ const getState = ({ getStore, getActions, setStore }) => {
 			starshipDetails: {},
 			counter: 0,
 			favorites: ['Anais'],
+			apiContact: 'https://playground.4geeks.com/contact/',
+			agenda: 'spain-65',
+			contacts: []
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
+			deleteContact: async (id) => {
+                const uri = `${getStore().apiContact}contacts/${id}`;
+                const options = {
+                    method: 'DELETE'
+                };
+                const response = await fetch(uri, options);
+                if (!response.ok) {
+                    console.log('Error:', response.status, response.statusText);
+                    return;
+                }
+                getActions().getContacts();
+            },
+			
+			updateContact: async (id, dataToSend) => {
+                const uri = `${getStore().apiContact}contacts/${id}`;
+                const options = {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(dataToSend)
+                };
+                const response = await fetch(uri, options);
+                if (!response.ok) {
+                    console.log('Error:', response.status, response.statusText);
+                    return;
+                }
+                getActions().getContacts();
+            },
+
+			addContact: async (dataToSend) => {
+				console.log(dataToSend);
+				const uri = getStore().apiContact + 'agendas/' + getStore().agenda + '/contacts';
+				const options = {
+					method: 'POST',
+					headers: {
+						'Content-type': 'application/json'
+					},
+					body: JSON.stringify(dataToSend)
+				}
+				const response = await fetch(uri, options);
+				if (!response.ok) {
+					console.log('Error', response.status, response.statusText);
+					return
+				}
+				getActions().getContacts();
+			},
+
+			getContacts: async () => {
+				const uri = getStore().apiContact + 'agendas/' + getStore().agenda + '/contacts';
+				// console.log(uri);
+				const response = await fetch(uri);
+				if (!response.ok) {
+					console.log('Error', response.status, response.statusText);
+					return
+				}
+				const data = await response.json()
+				setStore({contacts: data.contacts})
+				console.log('Data contacts', data.contacts)
+			},
+
 			getStarships: async () => {
                     const response = await fetch('https://www.swapi.tech/api/starships');
                     if (!response.ok) {

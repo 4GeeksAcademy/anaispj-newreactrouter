@@ -16,6 +16,9 @@ import { Starships } from "./component/Starships.jsx";
 import { CharacterDet } from "./component/CharacterDet.jsx";
 import { PlanetDet } from "./component/PlanetDet.jsx";
 import { StarshipDet } from "./component/StarshipDet.jsx";
+import { Contacts } from "./component/Contacts.jsx";
+import { AddContact } from "./component/AddContact.jsx";
+import { EditContact } from "./component/EditContact.jsx";
 
 //create your first component
 const Layout = () => {
@@ -41,6 +44,11 @@ const Layout = () => {
                         <Route element={<StarshipDet />} path="/starship-details/:starshipid" />
                         <Route element={<CharacterDet />} path="/character-details/:characterid" />
                         <Route element={<PlanetDet />} path="/planet-details/:planetid" />
+                        <Route element={<Contacts />} path="/contacts" />
+                        <Route element={<AddContact />} path="/add-contact" />
+                        <Route element={<EditContact />} path="/edit-contact/:id"/>
+
+
                     </Routes>
                     <Footer />
                 </ScrollToTop>

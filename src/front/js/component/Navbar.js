@@ -29,6 +29,9 @@ export const Navbar = () => {
                         <Link className="nav-link text-warning" to="/starships">Starships</Link>
                     </li>
                     <li className="nav-item">
+                        <Link className="nav-link text-warning" to="/contacts">Contacts</Link>
+                    </li>
+                    <li className="nav-item">
                         <Link to="#">
                     <div className="dropdown">
                         <button className="btn btn-secondary dropdown-toggle position-relative" type="button" data-bs-toggle="dropdown" aria-expanded="false">
