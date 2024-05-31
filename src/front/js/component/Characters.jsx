@@ -20,9 +20,16 @@ export const Characters = () => {
                         <div className="card-body">
                             <h5 className="card-title">{item.name}</h5>
                             <p className="card-text">Birth year:{item.birth_year}</p>
-                            <Link to={'/character-details/' + index} 
-                            // onClick={() => handleDetails(item)}
+
+                            <div className="d-flex justify-content-between">
+                            <Link to={'/character-details/' + index}
+                                // onClick={() => handleDetails(item)}
                                 className="btn btn-outline-secondary">Details</Link>
+                                <span className="text-danger me-2" onClick={() => actions.addFavorites(item.name)}>
+                                    <i className="far fa-heart"></i>
+                                </span>
+
+                            </div>
                         </div>
                     </div>
 
@@ -31,4 +38,5 @@ export const Characters = () => {
                 )}
             </div>
         </>
-    )};
+    )
+};

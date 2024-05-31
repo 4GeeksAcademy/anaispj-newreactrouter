@@ -25,7 +25,9 @@ const getState = ({ getStore, getActions, setStore }) => {
 			currentPlanet: '',
 			starships: [],
             currentStarship: '',
-			starshipDetails: {}
+			starshipDetails: {},
+			counter: 0,
+			favorites: ['Anais'],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -81,6 +83,12 @@ const getState = ({ getStore, getActions, setStore }) => {
 				}catch(error){
 					console.log("Error loading message from backend", error)
 				}
+			},
+			incrementar: () => {setStore({counter: getStore().counter + 1})},
+			decrementar: () => {setStore({counter: getStore().counter - 1})},
+			addFavorites: (newFavorite) => {setStore({favorites: [...getStore().favorites, newFavorite]})},
+			removeFavorites: (removeFavorite) => {
+				setStore({favorites: getStore().favorites.filter((item) => item != removeFavorite)})
 			},
 			changeColor: (index, color) => {
 				//get the store

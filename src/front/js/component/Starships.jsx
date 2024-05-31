@@ -21,6 +21,11 @@ export const Starships = () => {
                             <p className="card-text">Model: {starship.model}</p>
                             <p className="card-text">Manufacturer: {starship.manufacturer}</p>
                             <Link to={`/starship-details/${index}`} className="btn btn-outline-secondary">Details</Link>
+                            <div className="d-flex justify-content-between">
+                            <span className="text-danger me-2" onClick={() => actions.addFavorites(starship.name)}>
+                                        <i className="far fa-heart"></i>
+                                    </span>
+                                </div>
                         </div>
                     </div>
                 ))}
