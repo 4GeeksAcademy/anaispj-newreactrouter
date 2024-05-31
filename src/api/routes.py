@@ -16,3 +16,9 @@ def handle_hello():
     response_body = {}
     response_body['message'] = "Hello! I'm a message that came from the backend"
     return response_body, 200
+
+@api.route('/users', methods=['GET'])
+def handle_users():
+    response_body = {}
+    response_body['message'] = "Get de /users, funciona"
+    return response_body, 200
