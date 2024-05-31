@@ -35,20 +35,21 @@ const getState = ({ getStore, getActions, setStore }) => {
 		actions: {
 			// Use getActions to call a function within a fuction
 			deleteContact: async (id) => {
-                const uri = `${getStore().apiContact}contacts/${id}`;
-                const options = {
-                    method: 'DELETE'
-                };
-                const response = await fetch(uri, options);
-                if (!response.ok) {
-                    console.log('Error:', response.status, response.statusText);
-                    return;
-                }
-                getActions().getContacts();
-            },
+				const uri = `${getStore().apiContact}agendas/${getStore().agenda}/contacts/${id}`;
+
+				const response = await fetch(uri, {
+					method: 'DELETE'
+				});
+				if (!response.ok) {
+					console.log('Error:', response.status, response.statusText);
+					return;
+				}
+				getActions().getContacts();
+				console.log("Deleted contact. Updating contacts list...");
+			},
 			
 			updateContact: async (id, dataToSend) => {
-                const uri = `${getStore().apiContact}contacts/${id}`;
+                const uri = `${getStore().apiContact}agendas/${getStore().agenda}/contacts/${id}`;
                 const options = {
                     method: 'PUT',
                     headers: {

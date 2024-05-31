@@ -10,6 +10,15 @@ export const AddContact = () => {
     const [address, setAddress] = useState('');
     const navigate = useNavigate();
 
+    const handleReset = (event) => {
+        event.preventDefault();
+        // Resetear los valores de los inputs
+        setName('');
+        setEmail('');
+        setPhone('');
+        setAddress('');
+    }
+
     const handleSubmit = (event) => {
         event.preventDefault();
         const dataToSend = {name, email, phone, address}
@@ -42,7 +51,7 @@ export const AddContact = () => {
                     value={phone} onChange={(event) => setPhone(event.target.value)}/>
                 </div>
                 <button type="submit" className="btn btn-success">Submit</button>
-                <button type="reset" className="btn btn-danger ms-2">Cancel</button>
+                <button onClick={handleReset} type="reset" className="btn btn-danger ms-2">Reset</button>
 
             </form>
         </div>
