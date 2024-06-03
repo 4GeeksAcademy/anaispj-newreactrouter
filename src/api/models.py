@@ -27,6 +27,10 @@ class Users(db.Model):
 class Posts(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     title = db.Column(db.String(), nullable=False)
+    description = db.Column(db.String())
+    body = db.Column(db.String(), nullable=False)
+    date_publication = db.Column(db.Date(), nullable=False)
+    image_url = db.Column(db.String())
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))  # Corregido ForeignKey
     user_to = db.relationship('Users', foreign_keys=[user_id])
 
@@ -37,28 +41,36 @@ class Posts(db.Model):
         # Do not serialize the password, its a security breach
         return {'id': self.id,
                 'title': self.title,
+                'description': self.description,
+                'body': self.body,
+                'date_publication': self.date_publication,
+                'image_url': self.image_url,
                 'user_id': self.user_id}
 
 class Comments(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    title = db.Column(db.String(), nullable=False)
-    legend = db.Column(db.String(), nullable=False)
     body = db.Column(db.String(), nullable=False)
+    date = db.Column(db.Date(), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_to = db.relationship('Users', foreign_keys=[user_id])
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'))
+    post_to = db.relationship('Posts', foreign_keys=[post_id])
 
     def __repr__(self):
-        return f'<Comment {self.comment}>'
+        return f'<Comment {self.id}>'
 
     def serialize(self):
         # Do not serialize the password, its a security breach
         return {'id': self.id,
-                'title': self.title,
-                'legend': self.legend,
-                'body': self.body}
+                'body': self.body,
+                'date': self.date,
+                'user_id': self.user_id,
+                'post_id': self.post_id}
 
 class Planets(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String(), nullable=False)
-    diameter = db.Column(db.String(), nullable=False)
+    name = db.Column(db.String(), unique=True, nullable=False)
+    diameter = db.Column(db.String(), nullable=True)
 
     def __repr__(self):
         return f'<Planet {self.planet}>'
@@ -72,7 +84,7 @@ class Planets(db.Model):
 class Characters(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(), nullable=False)
-    description = db.Column(db.String(), nullable=False)
+    description = db.Column(db.String(), nullable=True)
 
     def __repr__(self):
         return f'<Character {self.character}>'
