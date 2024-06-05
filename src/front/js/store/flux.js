@@ -27,7 +27,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             currentStarship: '',
 			starshipDetails: {},
 			counter: 0,
-			favorites: ['Anais'],
+			favorites: [],
 			apiContact: 'https://playground.4geeks.com/contact/',
 			agenda: 'spain-65',
 			contacts: []
