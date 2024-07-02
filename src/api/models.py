@@ -69,6 +69,29 @@ class Comments(db.Model):
                 'user_id': self.user_id,
                 'post_id': self.post_id}
 
+class Likes(db.Model):
+    __tablename__ = 'likes'
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date(), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    user_to = db.relationship('Users', foreign_keys=[user_id])
+    post_id = db.Column(db.Integer, db.ForeignKey('posts.id'), nullable=True)
+    post_to = db.relationship('Posts', foreign_keys=[post_id])
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable=True)
+    comment_to = db.relationship('Comments', foreign_keys=[comment_id])
+
+    def __repr__(self):
+        return f'<Like {self.id}>'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'date': self.date,
+            'user_id': self.user_id,
+            'post_id': self.post_id,
+            'comment_id': self.comment_id
+        }
+
 class Planets(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     name = db.Column(db.String(), unique=True, nullable=False)
