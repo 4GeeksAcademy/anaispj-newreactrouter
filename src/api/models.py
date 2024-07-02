@@ -10,17 +10,19 @@ class Users(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(80), unique=False, nullable=False)
     is_active = db.Column(db.Boolean(), unique=False, nullable=False)
+    is_admin = db.Column(db.Boolean(), unique=False, nullable=True)
     first_name = db.Column(db.String(), unique=False, nullable=True)
     last_name = db.Column(db.String(), unique=False, nullable=True)
 
     def __repr__(self):
-        return f'<User {self.email}>'
+        return f'<User {self.id} - {self.email}>'
 
     def serialize(self):
         # Do not serialize the password, its a security breach
         return {'id': self.id,
                 'email': self.email,
                 'is_active': self.is_active,
+                'is_admin' : self.is_admin,
                 'first_name': self.first_name,
                 'last_name': self.last_name}
 
@@ -73,7 +75,7 @@ class Planets(db.Model):
     diameter = db.Column(db.String(), nullable=True)
 
     def __repr__(self):
-        return f'<Planet {self.planet}>'
+        return f'<Planet {self.name}>'
 
     def serialize(self):
         # Do not serialize the password, its a security breach
@@ -87,7 +89,7 @@ class Characters(db.Model):
     description = db.Column(db.String(), nullable=True)
 
     def __repr__(self):
-        return f'<Character {self.character}>'
+        return f'<Character {self.name}>'
 
     def serialize(self):
         # Do not serialize the password, its a security breach
@@ -103,7 +105,7 @@ class Films(db.Model):
 
 
     def __repr__(self):
-        return f'<Film {self.film}>'
+        return f'<Film {self.name}>'
 
     def serialize(self):
         # Do not serialize the password, its a security breach
