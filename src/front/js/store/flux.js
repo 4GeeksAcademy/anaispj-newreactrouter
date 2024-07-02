@@ -27,7 +27,7 @@ const getState = ({ getStore, getActions, setStore }) => {
             currentStarship: '',
 			starshipDetails: {},
 			counter: 0,
-			favorites: ['Anais'],
+			favorites: [''],
 		},
 		actions: {
 			// Use getActions to call a function within a fuction
@@ -69,25 +69,33 @@ const getState = ({ getStore, getActions, setStore }) => {
 				console.log('Dentro de data', data);
 				setStore({character: data.results})
 			},
-			settingCharacter: (user) => {setStore({currentCharacter: character})}, //PARECE QUE ESTO NO ESTA FUNCIONANDO
+			settingCharacter: (character) => {setStore({currentCharacter: character})}, 
 
 
 			getMessage: async () => {
 				try{
-					// fetching data from the backend
+					// fetch del backend
 					const resp = await fetch(process.env.BACKEND_URL + "/api/hello")
 					const data = await resp.text()
 					setStore({ message: data.message })
-					// don't forget to return something, that is how the async resolves
+					// retorno data
 					return data;
 				}catch(error){
 					console.log("Error loading message from backend", error)
 				}
 			},
-			addFavorites: (newFavorite) => {setStore({favorites: [...getStore().favorites, newFavorite]})},
-			removeFavorites: (removeFavorite) => {
-				setStore({favorites: getStore().favorites.filter((item) => item != removeFavorite)})
-			},
+            addFavorites: (newFavorite) => {
+                const store = getStore();
+                if (!store.favorites.includes(newFavorite)) {
+                    setStore({ favorites: [...store.favorites, newFavorite] });
+                } else {
+                    setStore({ favorites: store.favorites.filter((item) => item !== newFavorite) });
+                }
+            },
+
+            removeFavorites: (removeFavorite) => {
+                setStore({ favorites: getStore().favorites.filter((item) => item !== removeFavorite) });
+            },
 			changeColor: (index, color) => {
 				//get the store
 				const store = getStore();

@@ -5,7 +5,9 @@ import { Link } from "react-router-dom";
 export const Planets = () => {
     const { store, actions } = useContext(Context);
 
-
+    const isFavorite = (name) => {
+        return store.favorites.includes(name);
+    }
 
     return (
         <>
@@ -18,21 +20,18 @@ export const Planets = () => {
                             <h5 className="card-title">{item.name}</h5>
                             <p className="card-text">Clima: {item.climate}</p>
                             <div className="d-flex justify-content-between">
-                            <Link to={'/planet-details/' + index} 
-                            // onClick={() => handleDetails(item)}
-                                className="btn btn-outline-secondary">Details</Link>
-
-                                    <span className="text-danger me-2" onClick={() => actions.addFavorites(item.name)}>
-                                        <i className="far fa-heart"></i>
-                                    </span>
-                                </div>
+                                <Link to={'/planet-details/' + index} 
+                                    className="btn btn-outline-secondary">Details</Link>
+                                <span 
+                                    className={isFavorite(item.name) ? "text-danger" : "text-secondary"}
+                                    onClick={() => actions.addFavorites(item.name)}>
+                                    <i className={isFavorite(item.name) ? "fas fa-heart" : "far fa-heart"}></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
-
-
-
                 )}
             </div>
         </>
-    )};
-
+    )
+};

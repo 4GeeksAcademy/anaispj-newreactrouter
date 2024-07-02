@@ -5,10 +5,13 @@ import { Link } from "react-router-dom";
 export const Characters = () => {
     const { store, actions } = useContext(Context);
 
-    const handleDetails = (user) => {
-        actions.settingCharacter(user);
+    const handleDetails = (character) => {
+        actions.settingCharacter(character);
     }
 
+    const isFavorite = (name) => {
+        return store.favorites.includes(name);
+    }
 
     return (
         <>
@@ -19,22 +22,19 @@ export const Characters = () => {
                         <img src={`https://starwars-visualguide.com/assets/img/characters/${index + 1}.jpg`} className="card-img-top" alt="..." />
                         <div className="card-body">
                             <h5 className="card-title">{item.name}</h5>
-                            <p className="card-text">Birth year:{item.birth_year}</p>
+                            <p className="card-text">Birth year: {item.birth_year}</p>
 
                             <div className="d-flex justify-content-between">
-                            <Link to={'/character-details/' + index}
-                                // onClick={() => handleDetails(item)}
-                                className="btn btn-outline-secondary">Details</Link>
-                                <span className="text-danger me-2" onClick={() => actions.addFavorites(item.name)}>
-                                    <i className="far fa-heart"></i>
+                                <Link to={'/character-details/' + index}
+                                    className="btn btn-outline-secondary">Details</Link>
+                                <span
+                                    className={isFavorite(item.name) ? "text-danger" : "text-secondary"}
+                                    onClick={() => actions.addFavorites(item.name)}>
+                                    <i className={isFavorite(item.name) ? "fas fa-heart" : "far fa-heart"}></i>
                                 </span>
-
                             </div>
                         </div>
                     </div>
-
-
-
                 )}
             </div>
         </>

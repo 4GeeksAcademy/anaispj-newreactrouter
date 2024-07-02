@@ -9,6 +9,10 @@ export const Starships = () => {
         actions.getStarships();
     }, []);
 
+    const isFavorite = (name) => {
+        return store.favorites.includes(name);
+    }
+
     return (
         <div>
             <h1 className="text-center text-light">STARSHIPS</h1>
@@ -22,10 +26,12 @@ export const Starships = () => {
                             <p className="card-text">Manufacturer: {starship.manufacturer}</p>
                             <Link to={`/starship-details/${index}`} className="btn btn-outline-secondary">Details</Link>
                             <div className="d-flex justify-content-between">
-                            <span className="text-danger me-2" onClick={() => actions.addFavorites(starship.name)}>
-                                        <i className="far fa-heart"></i>
-                                    </span>
-                                </div>
+                                <span 
+                                    className={isFavorite(starship.name) ? "text-danger" : "text-secondary"}
+                                    onClick={() => actions.addFavorites(starship.name)}>
+                                    <i className={isFavorite(starship.name) ? "fas fa-heart" : "far fa-heart"}></i>
+                                </span>
+                            </div>
                         </div>
                     </div>
                 ))}
