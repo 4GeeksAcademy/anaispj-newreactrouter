@@ -8,7 +8,8 @@ from datetime import datetime
 from flask_jwt_extended import create_access_token
 from flask_jwt_extended import jwt_required
 from flask_jwt_extended import get_jwt_identity
-from api.models import db, Users, Posts, Planets
+from api.models import db, Users, Posts, Comments, Likes, Planets, Characters, Films, UserFavoriteCharacters, UserFavoritePlanets
+from flask_sqlalchemy import SQLAlchemy
 
 
 api = Blueprint('api', __name__)
@@ -64,6 +65,25 @@ def handle_users():
         return response_body, 200
 
 
+@api.route('/signup', methods=['POST'])
+def signup():
+    response_body = {}
+    data = request.json
+    email = data.get("email", None)
+    password = data.get("password", None)
+    first_name = data.get("first_name", None)
+    last_name = data.get("last_name", None)
+    if not email or not password:
+        response_body['message'] = "Se necesita un email y una contraseña"
+        return jsonify(response_body), 400
+    user = Users(email=email, password=password, first_name=first_name, last_name=last_name, is_active=True)
+    db.session.add(user)
+    db.session.commit()
+    response_body['message'] = "Usuario creado con exito"
+    response_body['user'] = user.serialize()
+    return jsonify(response_body), 201
+
+
 @api.route('/users/<int:user_id>', methods=['GET', 'PUT', 'DELETE'])
 def handle_user(user_id):
     response_body = {}
@@ -105,17 +125,114 @@ def handle_user(user_id):
         response_body['results'] = {}
         return response_body, 200
 
-    # if request.method == 'POST':
-    #     data = request.json
-    #     # TODO validacion de datos recibidos
-    #     row = Posts()
-    #     row.title = data['title']
-    #     row.description = data['description']
-    #     row.body = data['body']
-    #     row.image = data['image_url']
-    #     row.date_publication = datetime.today()
-    #     row.user_id = current_user['user_id']
-    #     db.session.add(row)
-    #     db.session.commit()
-    #     response_body['message'] = "Este endpoint no es valido. Debe hacer un /signup"
-    #     return response_body, 200
+
+# GET para todos los personajes
+@api.route('/people', methods=['GET'])
+def get_people():
+    response_body = {}
+    characters = Characters.query.all()  
+    results = [row.serialize() for row in characters]  
+    response_body['results'] = results
+    response_body['message'] = "Todos los personajes"
+    return response_body, 200
+
+
+# GET personaje por ID
+@api.route('/people/<int:people_id>', methods=['GET'])
+def get_person(people_id):
+    response_body = {}
+    character = Characters.query.get(people_id)
+    if character:
+        response_body['results'] = character.serialize()
+        response_body['message'] = 'Personaje encontrado'
+        return response_body, 200
+    response_body['message'] = 'Personaje inexistente'
+    return response_body, 404
+
+
+# GET de planetas
+@api.route('/planets', methods=['GET'])
+def get_planets():
+    response_body = {}
+    planets = Planets.query.all()
+    results = [row.serialize() for row in planets]
+    response_body['results'] = results
+    response_body['message'] = "Listado de Planetas"
+    return response_body, 200
+
+
+# GET un solo planeta por ID
+@api.route('/planets/<int:planet_id>', methods=['GET'])
+def get_planet(planet_id):
+    response_body = {}
+    planet = Planets.query.get(planet_id)
+    if planet:
+        response_body['results'] = planet.serialize()
+        response_body['message'] = 'Planeta encontrado'
+        return response_body, 200
+    response_body['message'] = 'Planeta inexistente'
+    return response_body, 404
+
+
+@api.route('/users/favorites', methods=['GET'])
+@jwt_required()
+def get_user_favorites():
+    response_body = {}
+    current_user_id = get_jwt_identity()['user_id']
+    favorite_planets = UserFavoritePlanets.query.filter_by(user_id=current_user_id).all()
+    favorite_characters = UserFavoriteCharacters.query.filter_by(user_id=current_user_id).all()
+    response_body['favorite_planets'] = [fav.planet.serialize() for fav in favorite_planets]
+    response_body['favorite_characters'] = [fav.character.serialize() for fav in favorite_characters]
+    response_body['message'] = "Favoritos del usuario"
+    return jsonify(response_body), 200
+
+
+@api.route('/users/favorite/planet/<int:planet_id>', methods=['POST'])
+@jwt_required()
+def add_favorite_planet(planet_id):
+    response_body = {}
+    current_user_id = get_jwt_identity()['user_id']
+    user_favorite_planet = UserFavoritePlanets(user_id=current_user_id, planet_id=planet_id)
+    db.session.add(user_favorite_planet)
+    db.session.commit()
+    response_body['message'] = f"Planeta {planet_id} añadido a favoritos"
+    return jsonify(response_body), 200
+
+
+@api.route('/users/favorite/people/<int:people_id>', methods=['POST'])
+@jwt_required()
+def add_favorite_people(people_id):
+    response_body = {}
+    current_user_id = get_jwt_identity()['user_id']
+    user_favorite_character = UserFavoriteCharacters(user_id=current_user_id, character_id=people_id)
+    db.session.add(user_favorite_character)
+    db.session.commit()
+    response_body['message'] = f"Personaje {people_id} añadido a favoritos"
+    return jsonify(response_body), 200
+
+
+@api.route('/users/favorite/planet/<int:planet_id>', methods=['DELETE'])
+@jwt_required()
+def delete_favorite_planet(planet_id):
+    response_body = {}
+    current_user_id = get_jwt_identity()['user_id']
+    user_favorite_planet = UserFavoritePlanets.query.filter_by(user_id=current_user_id, planet_id=planet_id).first()
+    if user_favorite_planet:
+        db.session.delete(user_favorite_planet)
+        db.session.commit()
+        response_body['message'] = f"Planeta {planet_id} eliminado de favoritos"
+        return jsonify(response_body), 200
+    response_body['message'] = "Favorito no encontrado"
+    return jsonify(response_body), 404
+
+
+@api.route('/users/favorite/people/<int:people_id>', methods=['DELETE'])
+@jwt_required()
+def delete_favorite_people(people_id):
+    response_body = {}
+    current_user_id = get_jwt_identity()['user_id']
+    user_favorite_character = UserFavoriteCharacters.query.filter_by(user_id=current_user_id, character_id=people_id).first()
+    if user_favorite_character:
+        db.session.delete(user_favorite_character)
+        db.session.commit()
+        response_body['message'] = "Eliminado"

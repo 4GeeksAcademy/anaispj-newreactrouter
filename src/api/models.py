@@ -136,3 +136,43 @@ class Films(db.Model):
                 'name': self.name,
                 'release': self.release,
                 'director': self.director}
+
+
+class UserFavoritePlanets(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    planet_id = db.Column(db.Integer, db.ForeignKey('planets.id'), nullable=False)
+    user = db.relationship('Users', foreign_keys=[user_id])
+    planet = db.relationship('Planets', foreign_keys=[planet_id])
+
+    def __repr__(self):
+        return f'<UserFavoritePlanet User: {self.user_id} Planet: {self.planet_id}>'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'planet_id': self.planet_id,
+            'user': self.user.serialize(),
+            'planet': self.planet.serialize()
+        }
+
+
+class UserFavoriteCharacters(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    character_id = db.Column(db.Integer, db.ForeignKey('characters.id'), nullable=False)
+    user = db.relationship('Users', foreign_keys=[user_id])
+    character = db.relationship('Characters', foreign_keys=[character_id])
+
+    def __repr__(self):
+        return f'<UserFavoriteCharacter User: {self.user_id} Character: {self.character_id}>'
+
+    def serialize(self):
+        return {
+            'id': self.id,
+            'user_id': self.user_id,
+            'character_id': self.character_id,
+            'user': self.user.serialize(),
+            'character': self.character.serialize()
+        }
