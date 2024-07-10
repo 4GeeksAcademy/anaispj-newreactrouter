@@ -16,8 +16,9 @@ import { Starships } from "./component/Starships.jsx";
 import { CharacterDet } from "./component/CharacterDet.jsx";
 import { PlanetDet } from "./component/PlanetDet.jsx";
 import { StarshipDet } from "./component/StarshipDet.jsx";
-import Login from "./component/Login.jsx";
 import Signup from "./component/Signup.jsx";
+import { Private } from "./component/Private.jsx";
+import { Login } from "./component/Login.jsx";
 
 //create your first component
 const Layout = () => {
@@ -45,7 +46,7 @@ const Layout = () => {
                         <Route element={<PlanetDet />} path="/planet-details/:planetid" />
                         <Route element={<Login />} path="/login" />
                         <Route element={<Signup />} path="/signup" />
-
+                        <Route element={<Private element={<Private />} />} path="/supersecretazo" />
                     </Routes>
                     <Footer />
                 </ScrollToTop>

@@ -236,3 +236,85 @@ def delete_favorite_people(people_id):
         db.session.delete(user_favorite_character)
         db.session.commit()
         response_body['message'] = "Eliminado"
+
+
+@api.route('/posts', methods=['GET', 'POST'])  # El POST de users lo haremos en el /signup
+def handle_posts():
+    response_body = {}
+    if request.method == 'GET':
+        # Aquí tengo que hacer la lógica para mostrar los usuarios que tengo en mi DB.
+        rows = db.session.execute(db.select(Posts)).scalars()
+        results = [row.serialize() for row in rows]  # Utilizo List Comprehension
+        response_body['results'] = results
+        response_body['message'] = 'Listado de Posts'
+        return response_body, 200
+    if request.method == 'POST':
+        data = request.json
+        # TODO: Validación de datos recibidos
+        row = Posts()
+        row.title = data['title']
+        row.description = data['description']
+        row.body = data['body']
+        row.image_url = data['image_url']
+        row.date_publication = datetime.today()
+        row.user_id = 2  # Lo obtengo del token
+        db.session.add(row)
+        db.session.commit()
+        response_body['results'] = row.serialize()
+        response_body['message'] = 'Posts creado'
+        return response_body, 200
+
+
+@api.route('/posts/<int:post_id>', methods=['GET', 'PUT', 'DELETE'])
+def handle_post(post_id):
+    response_body = {}
+    if request.method == 'GET':
+        response_body['message'] = 'Método GET de /posts/<int:post_id>'
+        response_body['results'] = {}
+        return response_body, 200
+    if request.method == 'PUT':
+        # data = request.json
+        # TODO: Validación de datos recibidos
+        # print(data)
+        response_body['message'] = 'Método PUT de /posts/<int:post_id>'
+        response_body['results'] = {}
+        return response_body, 200
+    if request.method == 'DELETE':
+        response_body['message'] = 'Método DELETE de /posts/<int:post_id>'
+        response_body['results'] = {}
+        return response_body, 200
+
+
+@api.route('/comments', methods=['GET', 'POST'])
+def handle_comments():
+    response_body = {}
+    if request.method == 'GET':
+        response_body['results'] = []
+        response_body['message'] = 'Metodo GET de /comments'
+        return response_body, 200
+    if request.method == 'POST':
+        # data = request.json
+        # TODO: Validación de datos recibidos
+        response_body['results'] = {}
+        response_body['message'] = 'Médodo Post de /comments'
+        return response_body, 200
+
+
+@api.route('/comments/<int:comment_id>', methods=['GET', 'PUT', 'DELETE'])
+def handle_comment(comment_id):
+    response_body = {}
+    if request.method == 'GET':
+        response_body['message'] = 'Método GET de /comments/<int:comment_id>'
+        response_body['results'] = {}
+        return response_body, 200
+    if request.method == 'PUT':
+        # data = request.json
+        # TODO: Validación de datos recibidos
+        # print(data)
+        response_body['message'] = 'Método PUT de /comments/<int:comment_id>'
+        response_body['results'] = {}
+        return response_body, 200
+    if request.method == 'DELETE':
+        response_body['message'] = 'Método DELETE de /comments/<int:comment_id>'
+        response_body['results'] = {}
+        return response_body, 200
